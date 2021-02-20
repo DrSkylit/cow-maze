@@ -1,69 +1,58 @@
+var lastTime = performance.now()
+var context;
+var prim;
+var sprite;
 document.addEventListener("DOMContentLoaded", function(){
-	var mazeSize = 20;
+	var mazeSize = 10;
 	var canvas = document.getElementById("canvas");
-	var context = canvas.getContext("2d");
+	context = canvas.getContext("2d");
+	var tileSize = canvas.width/mazeSize;
 
-	var prim = new PrimsMaze(context,mazeSize);
+	prim = new PrimsMaze(context,mazeSize);
 	prim.createMaze();
 	var maze = prim.getGrid();
+	prim.drawMaze();
 	var solver = new Solver(maze,{x:0,y:0},{x:mazeSize-1,y:mazeSize-1},mazeSize);
 	solver.solve();
-	console.log(solver.getMoveList());
-	console.log(solver.correctPath);
-	var removeTop = false;
-	var removeBottom = false;
-	var removeLeft = false;
-	var removeRight = false;
-
-	var x = 0;
-	var y = 0;
-	var boxSize = canvas.width/mazeSize;
-	context.beginPath();
-	for (var i = 0; i < maze.length; i++) {
-		for (var j = 0; j < maze[i].length; j++) {
-			for (var k = 0; k < maze[i][j].openWalls.length; k++) {
-				if((i-1) == maze[i][j].openWalls[k].x){
-					removeTop = true;
-				}
-				if((i+1) == maze[i][j].openWalls[k].x){
-					removeBottom = true 
-				}
-				if((j-1) == maze[i][j].openWalls[k].y){
-					removeLeft = true;
-				}
-				if((j+1) == maze[i][j].openWalls[k].y){
-					removeRight = true 
-				}
-			}
-			context.moveTo(x,y);
-			if(!removeTop){
-				context.lineTo(x+boxSize,y);
-			}
-			context.moveTo(x+boxSize,y);
-
-			if(!removeRight){
-				context.lineTo(x+boxSize,y+boxSize);
-			}
-			context.moveTo(x+boxSize,y+boxSize);
-
-			if(!removeBottom){
-				context.lineTo(x,y+boxSize);
-			}
-			context.moveTo(x,y+boxSize);
-			if(!removeLeft){
-				context.lineTo(x,y);
-			}
-			x = x + boxSize;
-
-			removeTop = false;
-			removeBottom = false;
-			removeLeft = false;
-			removeRight = false;
-		}
-		y = y + boxSize;
-		x = 0;
-	}
-	context.stroke();
+	 console.log(solver.getMoveList());
+	 console.log(solver.correctPath);
+	sprite = new Sprite(prim.tileSize,prim.tileSize,mazeSize,context);
+	sprite.createSprite(0,0);
+	window.addEventListener( "keydown", doKeyDown, true);
+	 window.requestAnimationFrame(gameLoop);
 
 });
 
+function doKeyDown(e){
+	if(e.key == "ArrowDown"){
+		sprite.y+=1;
+	}
+	if(e.key == "ArrowUp"){
+		sprite.y-=1;
+	}
+	if(e.key == "ArrowRight"){
+		sprite.x+=1;
+	}
+	if(e.key == "ArrowLeft"){
+		sprite.x-=1;
+	}
+}
+
+function gameLoop(currentTime){
+	var elapsedTime = currentTime - lastTime;
+	update(elapsedTime);
+	render();
+
+	lastTime = currentTime
+	window.requestAnimationFrame(gameLoop);
+}
+
+function update(time){
+
+}
+
+function render(){
+	context.clearRect(0, 0, canvas.width, canvas.height);
+	prim.drawMaze();
+	sprite.collision(prim.removedWalls);
+}

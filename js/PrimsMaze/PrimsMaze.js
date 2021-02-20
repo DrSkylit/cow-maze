@@ -7,6 +7,8 @@ function PrimsMaze(context,size){
 	this.frontier = [];
 	this.maze;
 	this.visitedCount = 0;
+	this.tileSize = canvas.width/this.size;
+	this.removedWalls = [];
 	this.createMaze = function(){
 		this.initializeGrid();
 		this.context.beginPath();
@@ -100,6 +102,8 @@ function PrimsMaze(context,size){
 		wallToRemove = walls[temp]
 		this.grid[frontierX][frontierY].openWalls.push(wallToRemove);
 		this.grid[wallToRemove.x][wallToRemove.y].openWalls.push({x:frontierX,y:frontierY});
+		this.removedWalls.push(wallToRemove);
+		this.removedWalls.push({x:frontierX,y:frontierY})
 	}
 
 	this.checkFrontier = function(x,y){
@@ -109,6 +113,68 @@ function PrimsMaze(context,size){
 			}
 		}
 		return false;
+	}
+
+	this.drawMaze = function(){
+		var removeTop = false;
+		var removeBottom = false;
+		var removeLeft = false;
+		var removeRight = false;
+
+		var x = 0;
+		var y = 0;
+		context.beginPath();
+		for (var i = 0; i < this.grid.length; i++) {
+			for (var j = 0; j < this.grid[i].length; j++) {
+				for (var k = 0; k < this.grid[i][j].openWalls.length; k++) {
+					if((i-1) == this.grid[i][j].openWalls[k].x){
+						removeTop = true;
+					}
+					if((i+1) == this.grid[i][j].openWalls[k].x){
+						removeBottom = true 
+					}
+					if((j-1) == this.grid[i][j].openWalls[k].y){
+						removeLeft = true;
+					}
+					if((j+1) == this.grid[i][j].openWalls[k].y){
+						removeRight = true 
+					}
+				}
+				context.moveTo(x,y);
+				if(!removeTop){
+					context.lineTo(x+this.tileSize,y);
+				}
+				context.moveTo(x+this.tileSize,y);
+
+				if(!removeRight){
+					context.lineTo(x+this.tileSize,y+this.tileSize);
+				}
+				context.moveTo(x+this.tileSize,y+this.tileSize);
+
+				if(!removeBottom){
+					context.lineTo(x,y+this.tileSize);
+				}
+				context.moveTo(x,y+this.tileSize);
+				if(!removeLeft){
+					context.lineTo(x,y);
+				}
+				x = x + this.tileSize;
+
+				removeTop = false;
+				removeBottom = false;
+				removeLeft = false;
+				removeRight = false;
+			}
+			y = y + this.tileSize;
+			x = 0;
+		}
+		context.stroke();
+		// sent start text
+		context.font = '18px sans-serif';
+  		context.strokeText('Start', 0, 20);
+  		// sent end text
+  		context.font = '18px sans-serif';
+  		context.strokeText('End', this.tileSize*(this.size)-35,this.tileSize*(this.size)-10);
 	}
 
 	this.getGrid = function(){
