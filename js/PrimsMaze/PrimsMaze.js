@@ -9,7 +9,22 @@ function PrimsMaze(context,size){
 	this.visitedCount = 0;
 	this.tileSize = canvas.width/this.size;
 	this.removedWalls = [];
+	this.moveList = [];
+	this.showPath = false;
+	this.crumbs = [];
+	this.showCrumbs = false;
+	this.showHint = false;
+	this.imgTile = new Image();
+	this.baleImg = new Image();
+	this.poopImg = new Image();
+	this.hayImg = new Image();
+	this.barnImg = new Image();
 	this.createMaze = function(){
+		this.imgTile.src = 'images/tiles1.png';
+		this.baleImg.src = 'images/bale.png';
+		this.poopImg.src = 'images/poop.png';
+		this.hayImg.src = 'images/hay.png';
+		this.barnImg.src = 'images/barn.png';
 		this.initializeGrid();
 		this.context.beginPath();
 		//pick random grid position
@@ -99,11 +114,11 @@ function PrimsMaze(context,size){
 			walls.push({x:frontierX,y:frontierY+1});
 		}
 		temp = Math.floor(Math.random() * walls.length);
-		wallToRemove = walls[temp]
+		wallToRemove = walls[temp];
 		this.grid[frontierX][frontierY].openWalls.push(wallToRemove);
 		this.grid[wallToRemove.x][wallToRemove.y].openWalls.push({x:frontierX,y:frontierY});
 		this.removedWalls.push(wallToRemove);
-		this.removedWalls.push({x:frontierX,y:frontierY})
+		this.removedWalls.push({x:frontierX,y:frontierY});
 	}
 
 	this.checkFrontier = function(x,y){
@@ -115,7 +130,7 @@ function PrimsMaze(context,size){
 		return false;
 	}
 
-	this.drawMaze = function(){
+	this.drawMaze = function(x,y){
 		var removeTop = false;
 		var removeBottom = false;
 		var removeLeft = false;
@@ -123,9 +138,35 @@ function PrimsMaze(context,size){
 
 		var x = 0;
 		var y = 0;
-		context.beginPath();
+		this.context.beginPath();
 		for (var i = 0; i < this.grid.length; i++) {
 			for (var j = 0; j < this.grid[i].length; j++) {
+				this.context.drawImage(this.imgTile, j*this.tileSize,i*this.tileSize, this.tileSize, this.tileSize);
+				if(this.showPath){
+					this.context.save();
+					for (var l = 0; l < this.moveList.length; l++) {
+						if((this.moveList[l].x != undefined || this.moveList[l].y != undefined) && this.moveList[l].x == i && this.moveList[l].y == j){
+						    this.context.drawImage(this.hayImg, j*this.tileSize,i*this.tileSize, this.tileSize, this.tileSize);
+						}
+					}
+					this.context.restore();
+				}
+				if(this.showCrumbs){
+					this.context.save();
+					for (var l = 0; l < this.crumbs.length; l++) {
+						if(this.crumbs[l].y == i && this.crumbs[l].x == j){
+							this.context.drawImage(this.poopImg, j*this.tileSize,i*this.tileSize, this.tileSize, this.tileSize);
+						}
+					}
+					this.context.restore();
+				}
+				if(this.showHint){
+					this.context.save();
+					if(this.moveList[1] != undefined && this.moveList[1].x == i && this.moveList[1].y == j){
+						this.context.drawImage(this.hayImg, j*this.tileSize,i*this.tileSize, this.tileSize, this.tileSize);
+					}
+					this.context.restore();
+				}
 				for (var k = 0; k < this.grid[i][j].openWalls.length; k++) {
 					if((i-1) == this.grid[i][j].openWalls[k].x){
 						removeTop = true;
@@ -140,23 +181,25 @@ function PrimsMaze(context,size){
 						removeRight = true 
 					}
 				}
-				context.moveTo(x,y);
+				this.context.strokeStyle = 'rgb(150, 75, 0)';
+				this.context.lineWidth = 5;
+				this.context.moveTo(x,y);
 				if(!removeTop){
-					context.lineTo(x+this.tileSize,y);
+					this.context.lineTo(x+this.tileSize,y);
 				}
-				context.moveTo(x+this.tileSize,y);
+				this.context.moveTo(x+this.tileSize,y);
 
 				if(!removeRight){
-					context.lineTo(x+this.tileSize,y+this.tileSize);
+					this.context.lineTo(x+this.tileSize,y+this.tileSize);
 				}
-				context.moveTo(x+this.tileSize,y+this.tileSize);
+				this.context.moveTo(x+this.tileSize,y+this.tileSize);
 
 				if(!removeBottom){
-					context.lineTo(x,y+this.tileSize);
+					this.context.lineTo(x,y+this.tileSize);
 				}
-				context.moveTo(x,y+this.tileSize);
+				this.context.moveTo(x,y+this.tileSize);
 				if(!removeLeft){
-					context.lineTo(x,y);
+					this.context.lineTo(x,y);
 				}
 				x = x + this.tileSize;
 
@@ -168,16 +211,25 @@ function PrimsMaze(context,size){
 			y = y + this.tileSize;
 			x = 0;
 		}
-		context.stroke();
+
+		this.context.stroke();
+		this.context.save();
 		// sent start text
-		context.font = '18px sans-serif';
-  		context.strokeText('Start', 0, 20);
+		  this.context.drawImage(this.barnImg,0, 0,this.tileSize,this.tileSize);
+		// this.context.font = '18px sans-serif';
+  		// this.context.fillText('Start', (this.tileSize/2)/2, 20);
   		// sent end text
-  		context.font = '18px sans-serif';
-  		context.strokeText('End', this.tileSize*(this.size)-35,this.tileSize*(this.size)-10);
+  		this.context.drawImage(this.baleImg, this.tileSize*(this.size)-(this.tileSize),this.tileSize*(this.size)-this.tileSize,this.tileSize,this.tileSize);
 	}
 
 	this.getGrid = function(){
 		return this.grid;
+	}
+
+	this.setMoveList = function(moves){
+		this.moveList = moves;
+	}
+	this.setBreadCrumbs = function(crumbs){
+		this.crumbs = crumbs;
 	}
 }

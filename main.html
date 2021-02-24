@@ -10,6 +10,38 @@
 	<link href="style/main.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-	<canvas id = "canvas" width = "800" height = "800"></canvas>
+	<h1 id = "title">COWTOPIA!</h1>
+	<div id="score-timer">
+		<h2 id = "score">Score: 0</h2>
+		<h2 id = "timer">Timer: 0</h2>
+	</div>
+	<div id = "menu">
+		<h2>Menu</h2>
+		<p>p: Show Path To Finish</p>
+		<p>b: Show breadcrumbs</p>
+		<p>h: hint</p>
+		<button id = "new-game-btn">New Game</button> 
+		<br>
+		<span>(With Current Maze Size)</span>
+		<br>
+		<br>
+		<button id = "change-size-btn">Change Size</button>
+		<br>
+		<div id = "radio-ctn">
+			<input type="radio" id="five" name = "maze-size" value="5">
+			<label >5x5</label><br>
+			<input type="radio" id="ten" name = "maze-size" value="10" checked>
+			<label >10x10</label><br>
+			<input type="radio" id="fifteen" name = "maze-size" value="15">
+			<label >15x15</label><br>
+			<input type="radio" id="twenty" name = "maze-size" value="20">
+			<label >20x20</label>
+		</div>
+		<span>(new game with selected maze size)</span>
+		<br>
+	</div>
+	<div id = "canvas-ctn">
+		<canvas id = "canvas" width = "800" height = "800"></canvas>
+	</div>
 </body>
 </html>

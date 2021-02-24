@@ -9,10 +9,10 @@ function Solver(maze,startPoint,endPoint,size){
 
 	this.solve = function(){
 		this.initialize();
-		this.move(this.startPoint.x,this.startPoint.y,[])
+		this.move(this.startPoint.x,this.startPoint.y)
 	}
 
-	this.move = function(x,y,list){
+	this.move = function(x,y){
 		if(x == this.endPoint.x && y == this.endPoint.y){
 			this.correctPath[x][y] = true;
 			this.moveList.push({x:x,y:y});
