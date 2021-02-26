@@ -17,9 +17,14 @@
 	</div>
 	<div id = "menu">
 		<h2>Menu</h2>
-		<p>p: Show Path To Finish</p>
+		<p>Every correct moves gives you 5 points per move. If you have hints turned on your will get -3 points per move.</p>
+		<p>Every wrong move will get you -2 points (this includes if you backtrack)</p>
+		<p>Everytime you show the full path you will get a -50 points</p>
+		<p>p: Show Path To Finish (-50)</p>
 		<p>b: Show breadcrumbs</p>
-		<p>h: hint</p>
+		<p>h: hint (-2 per move)</p>
+		<h2>Game</h2>
+		<br>
 		<button id = "new-game-btn">New Game</button> 
 		<br>
 		<span>(With Current Maze Size)</span>
@@ -39,9 +44,17 @@
 		</div>
 		<span>(new game with selected maze size)</span>
 		<br>
+		<h2>Controls</h2>
+		<p>arrow keys</p>
+		<p>wasd</p>
+		<p>ijkl</p>
+		<br>
+		<h2>Credits</h2>
+		<p>Created By: Chris Dolce</p>
 	</div>
 	<div id = "canvas-ctn">
-		<canvas id = "canvas" width = "800" height = "800"></canvas>
+		<canvas id = "canvas" width = "700" height = "700"></canvas>
 	</div>
+	<div id = "high-scores">High Scores</div>
 </body>
 </html>

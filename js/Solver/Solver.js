@@ -13,6 +13,18 @@ function Solver(maze,startPoint,endPoint,size){
 	}
 
 	this.move = function(x,y){
+		if(x < 0){
+			x = 0;
+		}
+		if(y < 0){
+			y = 0;
+		}
+		if(x > this.size-1){
+			x = this.size-1;
+		}
+		if(y > this.size-1){
+			y = this.size-1;
+		}
 		if(x == this.endPoint.x && y == this.endPoint.y){
 			this.correctPath[x][y] = true;
 			this.moveList.push({x:x,y:y});

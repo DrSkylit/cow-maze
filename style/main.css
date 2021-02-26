@@ -1,7 +1,5 @@
 body{
     background-image: url("../images/hoofs.jpg");
-	/*background-repeat: no-repeat;*/
-  	/*background-position: center;*/
 }
 h2{
 	display: inline;
@@ -10,22 +8,32 @@ h2{
 #title{
 	text-align: center;
 	margin: 0px;
-	background-color: #fff
+	background-color: #fff;
+	padding-left: 10%;
 }
 #score-timer{
 	background-color: #fff;
 	text-align: center;
-
+	padding-left: 10%;
 }
 #canvas{
 	display: block;
     margin: auto;
     width: 70%;
-    max-height: 800px;
-    max-width: 800px;
+    max-height: 700px;
+    max-width: 700px;
     min-width: 400px;
 }
 #menu{
 	float: left;
 	background-color: #fff;
+	max-width: 250px;
+}
+
+#high-scores{
+	background-color: #fff;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    padding: 10px;
 }

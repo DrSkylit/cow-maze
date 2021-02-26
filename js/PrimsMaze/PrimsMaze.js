@@ -214,11 +214,7 @@ function PrimsMaze(context,size){
 
 		this.context.stroke();
 		this.context.save();
-		// sent start text
-		  this.context.drawImage(this.barnImg,0, 0,this.tileSize,this.tileSize);
-		// this.context.font = '18px sans-serif';
-  		// this.context.fillText('Start', (this.tileSize/2)/2, 20);
-  		// sent end text
+		 this.context.drawImage(this.barnImg,0, 0,this.tileSize,this.tileSize);
   		this.context.drawImage(this.baleImg, this.tileSize*(this.size)-(this.tileSize),this.tileSize*(this.size)-this.tileSize,this.tileSize,this.tileSize);
 	}
 
